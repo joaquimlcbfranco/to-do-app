@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 /* CSS Reset */
 *,
@@ -74,11 +74,23 @@ body {
 	display: grid;
 	grid-template-columns: 1.3fr 4fr;
 	font-family: "Poppins", "Raleway", var(--default-fonts);
+    font-weight: 400;
 }
 
 img {
 	height: 30px;
 	width: 30px;
+}
+
+svg {
+    height: 25px;
+    width: 25px;
+    fill: rgb(87, 111, 114);
+    transition: transform 0.5s;
+}
+
+svg:hover {
+    transform: translateY(-1px) rotate(8deg);
 }
 
 #nav {
@@ -91,22 +103,27 @@ img {
 	background-color: rgb(228, 220, 207);
 }
 
-#nav span {
-	width: 100%;
-	height: 1px;
-	background-color: rgb(125, 157, 156);
-}
-
 #nav > .user-details {
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
 }
 
-.user-details .user-row:nth-child(1) {
-    font-size: 1.1rem;
+.user-row span,
+.nav-row span,
+.tag-row span {
+	width: 100%;
+	height: 2px;
+	background-color: rgb(87, 111, 114);
+}
+
+.user-details .user-row:nth-child(1),
+.nav-buttons .nav-row:nth-child(1),
+.tags > .tag-row:nth-child(1) {
+	font-size: 1.2rem;
 	font-weight: 600;
 	font-family: "Raleway", "Poppins", var(--default-fonts);
+    text-transform: capitalize;
 }
 
 .user-row {
@@ -115,8 +132,12 @@ img {
 	gap: 16px;
 }
 
+.user-row .user-picture {
+    border-radius: 50%;
+}
+
 .user-row .notifications {
-    margin-left: auto;
+	margin-left: auto;
 }
 
 .nav-buttons {
@@ -126,16 +147,35 @@ img {
 	gap: 16px;
 }
 
-.nav-buttons .nav-row:nth-child(1) {
-    font-size: 1.1rem;
-	font-weight: 600;
-	font-family: "Raleway", "Poppins", var(--default-fonts);
-}
-
 .nav-buttons .nav-row {
 	display: flex;
 	align-items: center;
 	gap: 16px;
+}
+
+.nav-row input[type="text"] {
+    border: none;
+    border-radius: 5px;
+    background: none;
+    outline: none;
+    transition: padding 0.5s, background-color 0.5s;
+}
+
+.nav-row input[type="text"]::placeholder {
+    color: rgb(0, 0, 0);
+    transition: text-align 0.5;
+}
+
+.nav-row input[type="text"]:hover,
+.nav-row input[type="text"]:focus {
+    padding-left: 10px;
+    background-color: rgb(240, 235, 227);
+    color: rgb(0, 0, 0, 0.75);
+}
+
+.nav-row input[type="text"]:hover::placeholder,
+.nav-row input[type="text"]:focus::placeholder {
+    color: rgb(0, 0, 0, 0.5);
 }
 
 .tags {
@@ -143,12 +183,6 @@ img {
 	flex-direction: column;
 	justify-content: space-evenly;
 	gap: 16px;
-}
-
-.tags > .tag-row:nth-child(1) {
-	font-size: 1.1rem;
-	font-weight: 600;
-	font-family: "Raleway", "Poppins", var(--default-fonts);
 }
 
 .tags .tag-row {
@@ -170,27 +204,121 @@ img {
 	border-radius: 15px;
 	border: none;
 	background-color: transparent;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	cursor: pointer;
 }
 
 .tag-row input[type="color"]::-webkit-color-swatch {
-    border-radius: 5px;
+	border-radius: 5px;
 }
 
 .tag-row input[type="color"]::-moz-color-swatch {
-    border-radius: 5px;
+	border-radius: 5px;
 }
 
 #content {
 	grid-column: 2 / 3;
-	padding: 32px;
+	padding: 48px;
 	background-color: rgb(240, 235, 227);
 }
 
 .header > .header-details > h2 {
-	font-size: 1.5rem;
+	font-size: 1.6rem;
 	font-family: "Raleway", "Poppins", var(--default-fonts);
+}
+
+.header {
+    display: flex;
+}
+
+.header-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-details > svg {
+    height: 30px;
+    width: 30px;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.cards {
+    padding: 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(auto-fit, 1fr);
+    gap: 32px;
+}
+
+.card, .empty-card {
+    min-height: 350px;
+    padding: 16px;
+    background-color: rgb(228, 220, 207);
+    border-radius: 5px;
+    border-left: 10px solid rgb(87, 111, 114);
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: "Raleway", "Poppins", var(--default-fonts);
+}
+
+
+.card-description {
+    margin-bottom: 32px;
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+.card-tags {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    margin-top: auto;
+}
+
+.card-tags p:first-child {
+    border: 1px solid rgb(87, 111, 114);
+    border-radius: 5px;
+    padding: 2px 8px;
+    background-color: rgb(255, 0, 0, 0.6);
+}
+
+.card .card-buttons {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.card label {
+    margin-right: auto;
+}
+
+.empty-card {
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-card svg {
+    height: 150px;
+    width: 150px;
+    opacity: 0.5;
+    transition: all 0.5s;
+}
+
+.empty-card svg:hover {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 1;
 }
