@@ -1,3 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 /* CSS Reset */
 *,
 *::before,
@@ -65,3 +68,129 @@ h6 {
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
+body {
+	height: 100vh;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1.3fr 4fr;
+	font-family: "Poppins", "Raleway", var(--default-fonts);
+}
+
+img {
+	height: 30px;
+	width: 30px;
+}
+
+#nav {
+	grid-column: 1 / 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	gap: 48px;
+	padding: 48px;
+	background-color: rgb(228, 220, 207);
+}
+
+#nav span {
+	width: 100%;
+	height: 1px;
+	background-color: rgb(125, 157, 156);
+}
+
+#nav > .user-details {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.user-details .user-row:nth-child(1) {
+    font-size: 1.1rem;
+	font-weight: 600;
+	font-family: "Raleway", "Poppins", var(--default-fonts);
+}
+
+.user-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.user-row .notifications {
+    margin-left: auto;
+}
+
+.nav-buttons {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	gap: 16px;
+}
+
+.nav-buttons .nav-row:nth-child(1) {
+    font-size: 1.1rem;
+	font-weight: 600;
+	font-family: "Raleway", "Poppins", var(--default-fonts);
+}
+
+.nav-buttons .nav-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.tags {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	gap: 16px;
+}
+
+.tags > .tag-row:nth-child(1) {
+	font-size: 1.1rem;
+	font-weight: 600;
+	font-family: "Raleway", "Poppins", var(--default-fonts);
+}
+
+.tags .tag-row {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.tag-row input[type="text"] {
+	border-radius: 15px;
+	border: none;
+	background: none;
+	padding-left: 10px;
+}
+
+.tag-row input[type="color"] {
+	width: 35px;
+	height: 25px;
+	border-radius: 15px;
+	border: none;
+	background-color: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+.tag-row input[type="color"]::-webkit-color-swatch {
+    border-radius: 5px;
+}
+
+.tag-row input[type="color"]::-moz-color-swatch {
+    border-radius: 5px;
+}
+
+#content {
+	grid-column: 2 / 3;
+	padding: 32px;
+	background-color: rgb(240, 235, 227);
+}
+
+.header > .header-details > h2 {
+	font-size: 1.5rem;
+	font-family: "Raleway", "Poppins", var(--default-fonts);
+}
