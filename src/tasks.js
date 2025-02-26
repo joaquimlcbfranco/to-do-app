@@ -15,16 +15,18 @@ const tasks = (() => {
     const addTask = (projectIndex, title, description = '', notes = '', priority = '', dueDate, complete) => {
         const task = new Task(title, description, notes, priority, dueDate, complete);
         projects.projectList[projectIndex].tasks.push(task);
+        console.log(projects.projectList[projectIndex]);
     };
 
     const editTask = (projectIndex, taskIndex, taskData) => {
-        projects.projectList[projectIndex].tasks[taskIndex].map((field) => {
-            this.field = taskData.field;
-        });
+        for (let key in projects.projectList[projectIndex].tasks[taskIndex]) {
+            projects.projectList[projectIndex].tasks[taskIndex][key] = taskData[key];
+        }
     };
 
     const deleteTask = (projectIndex, taskIndex) => {
         projects.projectList[projectIndex].tasks.splice(taskIndex, 1);
+        console.log(projects.projectList[projectIndex]);
     };
 
     return {
