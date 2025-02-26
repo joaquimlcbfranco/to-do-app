@@ -13,14 +13,17 @@ const projects = (() => {
     const addProject = (title) => {
         const project = new Project(title);
         projectList.push(project);
+        console.log(projectList);
     }
 
     const editProject = (projectIndex, title) => {
         projectList[projectIndex].title = title;
+        console.log(projectList);
     }
 
     const deleteProject = (projectIndex) => {
         projectList.splice(projectIndex, 1);
+        console.log(projectList);
     }
 
     return {
