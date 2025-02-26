@@ -1,6 +1,9 @@
 import "./styles.css";
-import projects from './projects.js'
+import tags from './tags.js'
 import tasks from './tasks.js'
+import dom from './dom.js'
 
-window.projects = projects;
+window.tags = tags;
 window.tasks = tasks;
+window.dom = dom;
+window.clear;
