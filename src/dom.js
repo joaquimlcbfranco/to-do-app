@@ -15,13 +15,11 @@ const dom = (() => {
     const cardsContainer = document.querySelector('.cards');
     const emptyCard = document.querySelector('.empty-card');
 
-    const fetchTasks = () => {
-        const tasks = document.querySelector('.card');
-        return tasks;
+    const fetchTasks = (projectIndex, taskIndex) => {
+        
     }
 
-
-    const loadForm = (projectIndex, taskIndex) => {
+    const loadForm = (formType, projectIndex, taskIndex) => {
         const dialog = document.createElement('dialog');
         const wrapper = document.createElement('div');
         const form = document.createElement('form');
@@ -87,7 +85,6 @@ const dom = (() => {
         priorityText.textContent = 'Priority';
         prioritySelect.id = 'form-select';
         none.setAttribute('value', 'none');
-        none.setAttribute('selected', '');
         none.textContent = '';
         lowPriority.setAttribute('value', 'low');
         lowPriority.textContent = 'Low';
@@ -105,10 +102,6 @@ const dom = (() => {
         submitButton.textContent = 'Submit';
         submitButton.classList.add('form-button');
         submitButton.setAttribute('type', 'submit');
-        submitButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            submitForm();
-        });
 
         body.appendChild(dialog);
         dialog.appendChild(wrapper);
@@ -155,6 +148,24 @@ const dom = (() => {
         form.appendChild(submitButton);
 
         dialog.showModal();
+
+        if (formType === 'add') {
+            prioritySelect.value = 'medium';
+        }
+
+        else if (formType === 'edit') {
+            formTitle.value = projects.projectList[projectIndex].tasks[taskIndex].title;
+            formDescription.value = projects.projectList[projectIndex].tasks[taskIndex].description;
+            formNotes.value = projects.projectList[projectIndex].tasks[taskIndex].notes;
+            prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
+            formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
+        }
+
+        submitButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            submitForm();
+        });
     }
 
     const closeForm = (dialog) => {
@@ -166,7 +177,7 @@ const dom = (() => {
     }
 
     emptyCard.addEventListener('click', () => {
-        loadForm();
+        loadForm('add');
     });
 
     return {
