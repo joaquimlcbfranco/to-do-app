@@ -64,9 +64,8 @@ h6 {
 /* Styling */
 :root {
 	font-size: 16px;
-	--default-fonts: system-ui, "Segoe UI", Helvetica, Arial,
-		sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-		"Segoe UI Symbol";
+	--default-fonts: system-ui, "Segoe UI", Helvetica, Arial, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 body {
@@ -81,6 +80,10 @@ body {
 img {
 	height: 30px;
 	width: 30px;
+}
+
+.hide {
+	display: none;
 }
 
 .material-symbols-outlined,
@@ -110,9 +113,17 @@ img {
 	gap: 16px;
 }
 
-.user-row:first-child span,
-.nav-row:first-child span,
-.tag-row:first-child span {
+.user-row:first-child span:first-child,
+.nav-row:first-child span:first-child,
+.tag-row:first-child span:first-child {
+	width: 100%;
+	height: 2px;
+	background-color: rgb(87, 111, 114);
+}
+
+.user-row:first-child span:nth-child(3),
+.nav-row:first-child span:nth-child(3),
+.tag-row:first-child span:nth-child(3) {
 	width: 100%;
 	height: 2px;
 	background-color: rgb(87, 111, 114);
@@ -199,6 +210,30 @@ img {
 	padding-left: 10px;
 }
 
+.tag-row input[type="text"] {
+	border: none;
+	border-radius: 5px;
+	background: none;
+	outline: none;
+	transition: padding 0.5s, background-color 0.5s;
+}
+
+.tag-row input[type="text"]::placeholder {
+	color: rgb(0, 0, 0);
+	transition: text-align 0.5;
+}
+
+.tag-row input[type="text"]:hover,
+.tag-row input[type="text"]:focus {
+	background-color: rgb(240, 235, 227);
+	color: rgb(0, 0, 0, 0.75);
+}
+
+.tag-row input[type="text"]:hover::placeholder,
+.tag-row input[type="text"]:focus::placeholder {
+	color: rgb(0, 0, 0, 0.5);
+}
+
 .tag-row input[type="color"] {
 	width: 35px;
 	height: 25px;
@@ -217,6 +252,20 @@ img {
 
 .tag-row input[type="color"]::-moz-color-swatch {
 	border-radius: 5px;
+}
+
+.tags > button {
+	border: 1px solid rgb(87, 111, 114);
+	border-radius: 5px;
+	outline: none;
+	background-color: rgb(87, 111, 114, 0);
+	cursor: pointer;
+	transition: 0.5s;
+}
+
+.tags > button:hover,
+.tags > button:active {
+	background-color: rgb(87, 111, 114, 0.05);
 }
 
 #content {
@@ -302,13 +351,14 @@ img {
 	gap: 16px;
 }
 
-.card label {
+.card label.checkbox {
 	margin-right: auto;
 }
 
 .empty-card {
 	align-items: center;
 	justify-content: center;
+	cursor: pointer;
 }
 
 .empty-card span {
@@ -318,7 +368,191 @@ img {
 	transition: all 0.5s;
 }
 
-.empty-card span:hover {
+.empty-card:hover > span {
 	transform: translateY(0px) rotate(0deg);
 	opacity: 1;
+}
+
+dialog[open] {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	max-height: 100vh;
+	width: 100%;
+	max-width: 100vw;
+	background: none;
+	overflow: hidden;
+}
+
+dialog[open]::after {
+	content: "";
+	height: 100vh;
+	width: 100%;
+	backdrop-filter: blur(10px);
+	position: absolute;
+	z-index: 0;
+}
+
+.wrapper {
+	z-index: 1;
+	padding: 64px;
+	background-color: rgba(228, 220, 207, 1);
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+	position: relative;
+}
+
+.dialog-form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.dialog-form .form-close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 12px;
+	padding: 0 8px;
+	outline: none;
+	border: 2px solid rgb(87, 111, 114);
+	font-size: 1.5rem;
+	background: none;
+	align-self: end;
+	border-radius: 5px;
+	transition: 0.2s;
+}
+
+.form-close::after {
+	content: "\00d7";
+}
+
+.form-close:hover {
+	background-color: rgb(87, 111, 114);
+	color: rgb(240, 235, 227);
+}
+
+.dialog-form input:not([type="checkbox"]),
+.dialog-form select,
+.dialog-form textarea {
+	background: rgb(240, 235, 227);
+	outline: none;
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+	padding: 2px 8px;
+	font-size: 0.9rem;
+	transition: color 0.2s;
+}
+
+.dialog-form input:not([type="checkbox"]),
+.dialog-form textarea,
+.dialog-form select {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+
+.dialog-form input:not([type="checkbox"]):hover,
+.dialog-form input:not([type="checkbox"]):focus,
+.dialog-form textarea:hover,
+.dialog-form textarea:focus,
+.dialog-form select:hover,
+.dialog-form select:focus {
+	color: rgb(0, 0, 0);
+}
+
+.dialog-form textarea {
+	width: 300px;
+	height: 150px;
+	resize: none;
+}
+
+.dialog-form label:not(.checkbox) {
+	display: flex;
+	align-items: center;
+	font-size: 1.2rem;
+	font-family: "Raleway", "Poppins", var(--default-fonts);
+	gap: 12px;
+}
+
+.dialog-form label:not(.checkbox) span:first-child {
+	width: 100%;
+	height: 2px;
+	background-color: rgb(87, 111, 114);
+}
+
+.dialog-form label:not(.checkbox) span:last-child {
+	width: 100%;
+	height: 2px;
+	background-color: rgb(87, 111, 114);
+}
+
+label.checkbox {
+	position: relative;
+	margin: 5px 0;
+	cursor: pointer;
+}
+
+label.checkbox input {
+	appearance: none;
+	display: none;
+}
+
+label.checkbox span {
+	position: relative;
+	display: block;
+	width: 50px;
+	height: 30px;
+	background: rgb(228, 220, 207);
+	border-radius: 40px;
+	box-shadow: inset 0 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+label.checkbox .indicator {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 30px;
+	height: 30px;
+	background: linear-gradient(to bottom, rgb(125, 157, 156), rgb(87, 111, 114));
+	border-radius: 50%;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5),
+				inset 0 1px 1px rgba(255, 255, 255, 0.2);
+	transition: 0.5s;
+}
+
+label.checkbox input:checked ~ .indicator {
+	left: 20px;
+}
+
+label.checkbox .indicator::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 3px;
+	height: 3px;
+	background: rgb(255, 0, 0);
+	border-radius: 50%;
+	transition: 0.5s;
+}
+
+label.checkbox input:checked ~ .indicator::before {
+	background: rgb(0, 255, 0);
+}
+
+.dialog-form .form-button {
+	border: 2px solid rgb(87, 111, 114);
+	border-radius: 5px;
+	outline: none;
+	background-color: rgb(87, 111, 114, 0);
+	cursor: pointer;
+	transition: 0.2s;
+}	
+.dialog-form > .form-button:hover,
+.tags > .form-button:active {
+	background-color: rgb(87, 111, 114);
+	color: rgb(240, 235, 227)
 }
