@@ -1,4 +1,4 @@
-import projects from "./projects.js";
+import tags from "./tags.js";
 
 const tasks = (() => {
     class Task {
@@ -12,21 +12,21 @@ const tasks = (() => {
         }
     }
 
-    const addTask = (projectIndex, title, description = '', notes = '', priority = '', dueDate, complete) => {
+    const addTask = (tagIndex, title, description = '', notes = '', priority = '', dueDate, complete) => {
         const task = new Task(title, description, notes, priority, dueDate, complete);
-        projects.projectList[projectIndex].tasks.push(task);
-        console.log(projects.projectList[projectIndex]);
+        tags.tagList[tagIndex].tasks.push(task);
+        console.log(tags.tagList[tagIndex]);
     };
 
-    const editTask = (projectIndex, taskIndex, taskData) => {
-        for (let key in projects.projectList[projectIndex].tasks[taskIndex]) {
-            projects.projectList[projectIndex].tasks[taskIndex][key] = taskData[key];
+    const editTask = (tagIndex, taskIndex, taskData) => {
+        for (let key in tags.tagList[tagIndex].tasks[taskIndex]) {
+            tags.tagList[tagIndex].tasks[taskIndex][key] = taskData[key];
         }
     };
 
-    const deleteTask = (projectIndex, taskIndex) => {
-        projects.projectList[projectIndex].tasks.splice(taskIndex, 1);
-        console.log(projects.projectList[projectIndex]);
+    const deleteTask = (tagIndex, taskIndex) => {
+        tags.tagList[tagIndex].tasks.splice(taskIndex, 1);
+        console.log(tags.tagList[tagIndex]);
     };
 
     return {
