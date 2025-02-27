@@ -1,5 +1,6 @@
 import tags from './tags.js'
 import tasks from './tasks.js'
+import { format, formatDistance, formatRelative, subDays } from 'date-fns'
 
 const dom = (() => {
     const body = document.querySelector('body');
@@ -8,7 +9,7 @@ const dom = (() => {
 
     const navRows = document.querySelector('nav-buttons > nav-row');
 
-    const tags = document.querySelector('.tags');
+    const tagsContainer = document.querySelector('.tags');
     const tagButton = document.querySelector('.tags > button');
 
     const headerDetails = document.querySelector('.header-details');
@@ -16,8 +17,12 @@ const dom = (() => {
     const emptyCard = document.querySelector('.empty-card');
 
     const displayTasks = () => {
-        for (let tagIndex = 0; tagIndex < tags.tagList.length; i++) {
-            for (let taskIndex = 0; taskIndex < tags.tagList.tasks.length; taskIndex++) {
+        while (cardsContainer.firstChild) {
+            cardsContainer.removeChild(cardsContainer.firstChild);
+        }
+
+        for (let tagIndex = 0; tagIndex < tags.tagList.length; tagIndex++) {
+            for (let taskIndex = 0; taskIndex < tags.tagList[tagIndex].tasks.length; taskIndex++) {
                 const task = tags.tagList[tagIndex].tasks[taskIndex];
                 
                 const card = document.createElement('div');
@@ -38,6 +43,8 @@ const dom = (() => {
                 const deleteButton = document.createElement('span');
 
                 card.classList.add('card');
+                card.setAttribute('data-task-id', taskIndex);
+                card.setAttribute('data-tag-id', tagIndex);
 
                 cardTitle.classList.add('card-title');
                 cardTitle.textContent = task.title;
@@ -46,8 +53,21 @@ const dom = (() => {
                 cardDescription.textContent = task.description;
 
                 cardTags.classList.add('card-tags');
-                cardPriority.textContent = 'test'
-                cardDate.textContent = task.date;
+                cardPriority.textContent = task.priority;
+                if (task.priority === 'low') {
+                    cardPriority.style.backgroundColor = 'rgb(195, 240, 214)';
+                }
+                else if (task.priority === 'medium') {
+                    cardPriority.style.backgroundColor = 'rgb(241, 254, 202)';
+                }
+                else if (task.priority === 'high') {
+                    cardPriority.style.backgroundColor = 'rgb(255, 208, 168)';
+                }
+                else if (task.priority === 'critical') {
+                    cardPriority.style.backgroundColor = 'rgb(255, 101, 119)';
+                }
+
+                cardDate.textContent = task.dueDate;
 
                 cardButtons.classList.add('card-buttons');
                 checkboxLabel.classList.add('checkbox');
@@ -55,8 +75,10 @@ const dom = (() => {
                 checkboxInput.type = 'checkbox';
                 checkboxIndicator.classList.add('indicator');
                 editButton.classList.add('material-symbols-outlined');
+                editButton.classList.add('edit');
                 editButton.textContent = 'edit';
                 deleteButton.classList.add('material-symbols-outlined');
+                deleteButton.classList.add('delete');
                 deleteButton.textContent = 'delete';
 
                 cardsContainer.appendChild(card);
@@ -77,6 +99,17 @@ const dom = (() => {
                 cardButtons.appendChild(deleteButton);
             }
         }
+
+        const emptyCard = document.createElement('div');
+        const newCard = document.createElement('span');
+
+        emptyCard.classList.add('empty-card');
+        newCard.classList.add('material-icons');
+        newCard.classList.add('empty-card-icon');
+        newCard.innerHTML = '&#xe145;';
+
+        cardsContainer.appendChild(emptyCard);
+        emptyCard.appendChild(newCard);
     }
 
     const loadTasksForm = (formType, projectIndex, taskIndex) => {
@@ -129,15 +162,16 @@ const dom = (() => {
 
         closeButton.classList.add('form-close');
         closeButton.setAttribute('type', 'button');
-        closeButton.addEventListener('click', () => closeForm(dialog));
 
         titleText.textContent = 'Title';
         formTitle.id = 'form-title';
         formTitle.type = 'text'
+        formTitle.required = true;
 
         descriptionText.textContent = 'Description';
         formDescription.id = 'form-description';
         formDescription.type = 'text'
+        formDescription.setAttribute('maxlength', '50');
 
         notesText.textContent = 'Notes';
         formNotes.id = 'form-notes';
@@ -220,15 +254,9 @@ const dom = (() => {
             prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
             formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
         }
-
-        submitButton.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            submitForm();
-        });
     }
 
-    const loadTagsForm = (formType, projectIndex) => {
+    const loadTagsForm = (formType, projectIndex, taskIndex) => {
         const dialog = document.createElement('dialog');
         const wrapper = document.createElement('div');
         const form = document.createElement('form');
@@ -255,7 +283,6 @@ const dom = (() => {
 
         closeButton.classList.add('form-close');
         closeButton.setAttribute('type', 'button');
-        closeButton.addEventListener('click', () => closeForm(dialog));
 
         titleText.textContent = 'Title';
         formTitle.id = 'form-title';
@@ -305,30 +332,51 @@ const dom = (() => {
             prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
             formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
         }
-
-        submitButton.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            submitForm();
-        });
     }
 
-    const closeForm = (dialog) => {
+    const closeForm = () => {
+        const dialog = document.querySelector('dialog');
         dialog.close();
     }
 
-    const submitForm = () => {
+    loadTasksForm('add');
 
+    const submitForm = (tagIndex, taskIndex) => {
+        const form = document.querySelector('dialog > .wrapper > .dialog-form');
+        const title = form.querySelector('#form-title');
+        if (!title) {
+            alert('test');
+        }
+        console.log(title);
+        const description = form.querySelector('form > #form-description');
+        const notes = form.querySelector('form > #form-notes');
+        const priority = form.querySelector('form > #form-select');
+        console.log(priority.value);
+        if (priority.value != 'none' && priority.value != 'low' && priority.value != 'medium' && priority.value != 'high' && priority.value != 'critical') {
+            priority.style.color = 'rgb(255, 0, 0)';
+            priority.style.border = '1px solid rgb(255, 0, 0)';
+            console.log('entered');
+            return;
+        }
+        else {
+        }
+        const dueDate = form.querySelector('form > #form-date');
+        try {
+            console.log(formatDistance(dueDate.value, new Date(), { addSuffix: true }));
+        }
+        catch (error) {
+            dueDate.style.color = 'rgb(255, 0, 0)';
+            dueDate.style.border = '1px solid rgb(255, 0, 0)';
+            return;
+        }
+        
     }
-
-    emptyCard.addEventListener('click', () => {
-        loadTasksForm('add');
-    });
 
     return {
         displayTasks,
         loadTasksForm,
         loadTagsForm,
+        submitForm,
         closeForm,
     }
 })();
