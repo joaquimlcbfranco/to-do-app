@@ -112,7 +112,7 @@ const dom = (() => {
         emptyCard.appendChild(newCard);
     }
 
-    const loadTasksForm = (formType, projectIndex, taskIndex) => {
+    const loadTasksForm = (formType, tagIndex = '', taskIndex = '') => {
         const dialog = document.createElement('dialog');
         const wrapper = document.createElement('div');
         const form = document.createElement('form');
@@ -159,6 +159,8 @@ const dom = (() => {
         wrapper.classList.add('wrapper');
 
         form.classList.add('dialog-form');
+        form.setAttribute('data-tag-id', tagIndex);
+        form.setAttribute('data-task-id', taskIndex);
 
         closeButton.classList.add('form-close');
         closeButton.setAttribute('type', 'button');
@@ -167,6 +169,7 @@ const dom = (() => {
         formTitle.id = 'form-title';
         formTitle.type = 'text'
         formTitle.required = true;
+        formTitle.placeholder = 'required';
 
         descriptionText.textContent = 'Description';
         formDescription.id = 'form-description';
@@ -192,6 +195,7 @@ const dom = (() => {
         dateText.textContent = 'Date';
         formDate.id = 'form-date';
         formDate.type = 'date';
+        formDate.style.color = 'rgb(255, 101, 119)';
 
         submitButton.textContent = 'Submit';
         submitButton.classList.add('form-button');
@@ -244,19 +248,19 @@ const dom = (() => {
         dialog.showModal();
 
         if (formType === 'add') {
-            prioritySelect.value = 'medium';
+            prioritySelect.value = 'none';
         }
 
         else if (formType === 'edit') {
-            formTitle.value = projects.projectList[projectIndex].tasks[taskIndex].title;
-            formDescription.value = projects.projectList[projectIndex].tasks[taskIndex].description;
-            formNotes.value = projects.projectList[projectIndex].tasks[taskIndex].notes;
-            prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
-            formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
+            formTitle.value = projects.tagList[tagIndex].tasks[taskIndex].title;
+            formDescription.value = projects.tagList[tagIndex].tasks[taskIndex].description;
+            formNotes.value = projects.tagList[tagIndex].tasks[taskIndex].notes;
+            prioritySelect.value = projects.tagList[tagIndex].tasks[taskIndex].priority;
+            formDate.value = tagIndex.tagList[tagIndex].tasks[taskIndex].dueDate;
         }
     }
 
-    const loadTagsForm = (formType, projectIndex, taskIndex) => {
+    const loadTagsForm = (formType, tagIndex = '', taskIndex = '') => {
         const dialog = document.createElement('dialog');
         const wrapper = document.createElement('div');
         const form = document.createElement('form');
@@ -280,6 +284,8 @@ const dom = (() => {
         wrapper.classList.add('wrapper');
 
         form.classList.add('dialog-form');
+        form.setAttribute('data-tag-id', tagIndex);
+        form.setAttribute('data-task-id', taskIndex);
 
         closeButton.classList.add('form-close');
         closeButton.setAttribute('type', 'button');
@@ -326,51 +332,70 @@ const dom = (() => {
         }
 
         else if (formType === 'edit') {
-            formTitle.value = projects.projectList[projectIndex].tasks[taskIndex].title;
-            formDescription.value = projects.projectList[projectIndex].tasks[taskIndex].description;
-            formNotes.value = projects.projectList[projectIndex].tasks[taskIndex].notes;
-            prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
-            formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
+            formTitle.value = projects.tagList[tagIndex].title;
+            formColor.value = projects.tagList[tagIndex].color
         }
     }
 
     const closeForm = () => {
-        const dialog = document.querySelector('dialog');
+        const dialog = document.querySelector('dialog[open]');
         dialog.close();
     }
 
-    loadTasksForm('add');
-
-    const submitForm = (tagIndex, taskIndex) => {
+    const submitForm = () => {
         const form = document.querySelector('dialog > .wrapper > .dialog-form');
+        const tagIndex = form.getAttribute('data-tag-id');
+        console.log(tagIndex);
+        console.log(tagIndex === '');
+        const taskIndex = form.getAttribute('data-task-id');
+
         const title = form.querySelector('#form-title');
-        if (!title) {
-            alert('test');
+        if (title.value == '') {
+            title.style.color = 'rgb(255, 101, 119)';
+            title.style.border = '1px solid rgb(255, 101, 119)';
+            return;
         }
-        console.log(title);
+        else {
+            title.style.color = 'rgba(0, 0, 0, 1)';
+            title.style.border = 'none';
+        }
+
         const description = form.querySelector('form > #form-description');
+        description.style.color = 'rgb(0, 0 ,0)';
+
         const notes = form.querySelector('form > #form-notes');
+        description.style.color = 'rgb(0, 0 ,0)';
+
         const priority = form.querySelector('form > #form-select');
-        console.log(priority.value);
         if (priority.value != 'none' && priority.value != 'low' && priority.value != 'medium' && priority.value != 'high' && priority.value != 'critical') {
-            priority.style.color = 'rgb(255, 0, 0)';
-            priority.style.border = '1px solid rgb(255, 0, 0)';
+            priority.style.color = 'rgb(255, 101, 119)';
+            priority.style.border = '1px solid rgb(255, 101, 119)';
             console.log('entered');
             return;
         }
         else {
+            priority.style.color = 'rgba(0, 0, 0, 1)';
+            priority.style.border = 'none';
         }
+
         const dueDate = form.querySelector('form > #form-date');
         try {
+            dueDate.style.color = 'rgba(0, 0, 0, 1)';
+            dueDate.style.border = 'none';
             console.log(formatDistance(dueDate.value, new Date(), { addSuffix: true }));
         }
         catch (error) {
-            dueDate.style.color = 'rgb(255, 0, 0)';
-            dueDate.style.border = '1px solid rgb(255, 0, 0)';
+            dueDate.style.color = 'rgb(255, 101, 119)';
+            dueDate.style.border = '1px solid rgb(255, 101, 119)';
             return;
         }
-        
+
+        if (tagIndex == '' && taskIndex == '') {
+            console.log('ADD');
+        }
     }
+
+    tags.addTag('test','rgb(359,999,999)');
 
     return {
         displayTasks,
