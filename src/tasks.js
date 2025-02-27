@@ -18,10 +18,12 @@ const tasks = (() => {
         console.log(tags.tagList[tagIndex]);
     };
 
-    const editTask = (tagIndex, taskIndex, taskData) => {
-        for (let key in tags.tagList[tagIndex].tasks[taskIndex]) {
-            tags.tagList[tagIndex].tasks[taskIndex][key] = taskData[key];
-        }
+    const editTask = (tagIndex, taskIndex, title, description, notes, priority, dueDate) => {
+        tags.tagList[tagIndex].tasks[taskIndex].title = title;
+        tags.tagList[tagIndex].tasks[taskIndex].description = description;
+        tags.tagList[tagIndex].tasks[taskIndex].notes = notes;
+        tags.tagList[tagIndex].tasks[taskIndex].priority = priority;
+        tags.tagList[tagIndex].tasks[taskIndex].dueDate = dueDate;
     };
 
     const deleteTask = (tagIndex, taskIndex) => {
