@@ -91,6 +91,7 @@ img {
 	font-size: 1.7rem;
 	color: rgb(87, 111, 114);
 	transition: transform 0.5s;
+	cursor: pointer;
 }
 
 .material-symbols-outlined:hover {
@@ -555,4 +556,8 @@ label.checkbox input:checked ~ .indicator::before {
 .tags > .form-button:active {
 	background-color: rgb(87, 111, 114);
 	color: rgb(240, 235, 227)
+}
+
+.dialog-form input[type="color"] {
+	align-self: center;
 }
