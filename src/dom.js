@@ -10,11 +10,55 @@ const dom = (() => {
     const navRows = document.querySelector('nav-buttons > nav-row');
 
     const tagsContainer = document.querySelector('.tags');
-    const tagButton = document.querySelector('.tags > button');
 
     const headerDetails = document.querySelector('.header-details');
     const cardsContainer = document.querySelector('.cards');
     const emptyCard = document.querySelector('.empty-card');
+
+    const displayTags = () => {
+        const tagRows = tagsContainer.querySelectorAll('.tag-row');
+        tagRows.forEach((row) => {
+            tagsContainer.removeChild(row);
+        });
+
+        const tagButton = tagsContainer.querySelector('button');
+        tagsContainer.removeChild(tagButton);
+
+        
+        const tagRow = document.createElement('div');
+        const tagSpan = document.createElement('span');
+        const tagTitle = document.createElement('p');
+        const editButton = document.createElement('span');
+        const deleteButton = document.createElement('span');
+
+        tagRow.classList.add('tag-row');
+        tagSpan.classList.add('material-symbols-outlined');
+        tagSpan.textContent = 'tag';
+        tagTitle.textContent = 'General';
+        tagTitle.id = 'general';
+        editButton.classList.add('edit-tag', 'material-symbols-outlined');
+        editButton.textContent = 'edit';
+        deleteButton.classList.add('delete-tag', 'material-symbols-outlined');
+        deleteButton.textContent = 'delete';
+
+        tagsContainer.appendChild(tagRow);
+        tagRow.appendChild(tagSpan);
+        tagRow.appendChild(tagTitle);
+        if (tagTitle.id != 'general') {
+            tagRow.appendChild(editButton);
+            tagRow.appendChild(deleteButton);
+        }
+
+
+
+        const button = document.createElement('button');
+        
+        button.type = 'button';
+        button.textContent = '+';
+        button.classList.add('tags-button');
+
+        tagsContainer.appendChild(button);
+    }
 
     const displayTasks = () => {
         while (cardsContainer.firstChild) {
@@ -67,7 +111,7 @@ const dom = (() => {
                     cardPriority.style.backgroundColor = 'rgb(255, 101, 119)';
                 }
 
-                cardDate.textContent = task.dueDate;
+                cardDate.textContent = formatDistance(task.dueDate, new Date(), { addSuffix: true });
 
                 cardButtons.classList.add('card-buttons');
                 checkboxLabel.classList.add('checkbox');
@@ -110,6 +154,83 @@ const dom = (() => {
 
         cardsContainer.appendChild(emptyCard);
         emptyCard.appendChild(newCard);
+    }
+
+    const loadTagsForm = (formType, tagIndex = 0, taskIndex = '') => {
+        const dialog = document.createElement('dialog');
+        const wrapper = document.createElement('div');
+        const form = document.createElement('form');
+
+        const closeButton = document.createElement('button');
+
+        const titleLabel = document.createElement('label');
+        const titleSpan1 = document.createElement('span');
+        const titleText = document.createElement('p');
+        const titleSpan2 = document.createElement('span');
+        const formTitle = document.createElement('input');
+
+        const colorLabel = document.createElement('label');
+        const colorSpan1 = document.createElement('span');
+        const colorText = document.createElement('p');
+        const colorSpan2 = document.createElement('span')
+        const formColor = document.createElement('input');
+
+        const submitButton = document.createElement('button');
+
+        wrapper.classList.add('wrapper');
+
+        form.classList.add('dialog-form');
+        form.setAttribute('data-tag-id', tagIndex);
+        form.setAttribute('data-task-id', taskIndex);
+
+        closeButton.classList.add('form-close');
+        closeButton.setAttribute('type', 'button');
+
+        titleText.textContent = 'Title';
+        formTitle.id = 'form-title';
+        formTitle.type = 'text'
+
+        colorText.textContent = 'Color';
+        formColor.id = 'form-color';
+        formColor.type = 'color';
+
+        submitButton.textContent = 'Submit';
+        submitButton.classList.add('form-button');
+        submitButton.setAttribute('type', 'submit');
+
+        body.appendChild(dialog);
+        dialog.appendChild(wrapper);
+        wrapper.appendChild(form);
+
+        form.appendChild(closeButton);
+
+        form.appendChild(titleLabel);
+        titleLabel.appendChild(titleSpan1);
+        titleLabel.appendChild(titleText);
+        titleLabel.appendChild(titleSpan2);
+        form.appendChild(formTitle);
+
+        form.appendChild(colorLabel);
+        colorLabel.appendChild(colorSpan1);
+        colorLabel.appendChild(colorText);
+        colorLabel.appendChild(colorSpan2);
+        form.appendChild(formColor);
+
+        form.appendChild(submitButton);
+
+        dialog.showModal();
+
+        if (formType === 'add') {
+            const red = Math.random() * (255 - 0);
+            const green = Math.random() * (255 - 0);
+            const blue = Math.random() * (255 - 0);
+            formColor.value = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        else if (formType === 'edit') {
+            formTitle.value = projects.tagList[tagIndex].title;
+            formColor.value = projects.tagList[tagIndex].color
+        }
     }
 
     const loadTasksForm = (formType, tagIndex = '', taskIndex = '') => {
@@ -195,7 +316,6 @@ const dom = (() => {
         dateText.textContent = 'Date';
         formDate.id = 'form-date';
         formDate.type = 'date';
-        formDate.style.color = 'rgb(255, 101, 119)';
 
         submitButton.textContent = 'Submit';
         submitButton.classList.add('form-button');
@@ -252,88 +372,11 @@ const dom = (() => {
         }
 
         else if (formType === 'edit') {
-            formTitle.value = projects.tagList[tagIndex].tasks[taskIndex].title;
-            formDescription.value = projects.tagList[tagIndex].tasks[taskIndex].description;
-            formNotes.value = projects.tagList[tagIndex].tasks[taskIndex].notes;
-            prioritySelect.value = projects.tagList[tagIndex].tasks[taskIndex].priority;
-            formDate.value = tagIndex.tagList[tagIndex].tasks[taskIndex].dueDate;
-        }
-    }
-
-    const loadTagsForm = (formType, tagIndex = '', taskIndex = '') => {
-        const dialog = document.createElement('dialog');
-        const wrapper = document.createElement('div');
-        const form = document.createElement('form');
-
-        const closeButton = document.createElement('button');
-
-        const titleLabel = document.createElement('label');
-        const titleSpan1 = document.createElement('span');
-        const titleText = document.createElement('p');
-        const titleSpan2 = document.createElement('span');
-        const formTitle = document.createElement('input');
-
-        const colorLabel = document.createElement('label');
-        const colorSpan1 = document.createElement('span');
-        const colorText = document.createElement('p');
-        const colorSpan2 = document.createElement('span')
-        const formColor = document.createElement('input');
-
-        const submitButton = document.createElement('button');
-
-        wrapper.classList.add('wrapper');
-
-        form.classList.add('dialog-form');
-        form.setAttribute('data-tag-id', tagIndex);
-        form.setAttribute('data-task-id', taskIndex);
-
-        closeButton.classList.add('form-close');
-        closeButton.setAttribute('type', 'button');
-
-        titleText.textContent = 'Title';
-        formTitle.id = 'form-title';
-        formTitle.type = 'text'
-
-        colorText.textContent = 'Color';
-        formColor.id = 'form-color';
-        formColor.type = 'color';
-
-        submitButton.textContent = 'Submit';
-        submitButton.classList.add('form-button');
-        submitButton.setAttribute('type', 'submit');
-
-        body.appendChild(dialog);
-        dialog.appendChild(wrapper);
-        wrapper.appendChild(form);
-
-        form.appendChild(closeButton);
-
-        form.appendChild(titleLabel);
-        titleLabel.appendChild(titleSpan1);
-        titleLabel.appendChild(titleText);
-        titleLabel.appendChild(titleSpan2);
-        form.appendChild(formTitle);
-
-        form.appendChild(colorLabel);
-        colorLabel.appendChild(colorSpan1);
-        colorLabel.appendChild(colorText);
-        colorLabel.appendChild(colorSpan2);
-        form.appendChild(formColor);
-
-        form.appendChild(submitButton);
-
-        dialog.showModal();
-
-        if (formType === 'add') {
-            const red = Math.random() * (255 - 0);
-            const green = Math.random() * (255 - 0);
-            const blue = Math.random() * (255 - 0);
-            formColor.value = `rgb(${red}, ${green}, ${blue})`;
-        }
-
-        else if (formType === 'edit') {
-            formTitle.value = projects.tagList[tagIndex].title;
-            formColor.value = projects.tagList[tagIndex].color
+            formTitle.value = tags.tagList[tagIndex].tasks[taskIndex].title;
+            formDescription.value = tags.tagList[tagIndex].tasks[taskIndex].description;
+            formNotes.value = tags.tagList[tagIndex].tasks[taskIndex].notes;
+            prioritySelect.value = tags.tagList[tagIndex].tasks[taskIndex].priority;
+            formDate.value = tags.tagList[tagIndex].tasks[taskIndex].dueDate;
         }
     }
 
@@ -343,10 +386,8 @@ const dom = (() => {
     }
 
     const submitForm = () => {
-        const form = document.querySelector('dialog > .wrapper > .dialog-form');
+        const form = document.querySelector('dialog[open] > .wrapper > .dialog-form');
         const tagIndex = form.getAttribute('data-tag-id');
-        console.log(tagIndex);
-        console.log(tagIndex === '');
         const taskIndex = form.getAttribute('data-task-id');
 
         const title = form.querySelector('#form-title');
@@ -382,7 +423,6 @@ const dom = (() => {
         try {
             dueDate.style.color = 'rgba(0, 0, 0, 1)';
             dueDate.style.border = 'none';
-            console.log(formatDistance(dueDate.value, new Date(), { addSuffix: true }));
         }
         catch (error) {
             dueDate.style.color = 'rgb(255, 101, 119)';
@@ -390,15 +430,21 @@ const dom = (() => {
             return;
         }
 
-        if (tagIndex == '' && taskIndex == '') {
-            console.log('ADD');
+        if (tagIndex == 0 && taskIndex == '') {
+            tasks.addTask(+tagIndex, title.value, description.value, notes.value, priority.value, dueDate.value, false);
+            closeForm();
+        }
+        else if (taskIndex != '') {
+            tasks.editTask(tagIndex, taskIndex, title.value, description.value, notes.value, priority.value, dueDate.value);
+            closeForm();
         }
     }
 
-    tags.addTag('test','rgb(359,999,999)');
+    tags.addTag('General','rgb(87, 111, 114)');
 
     return {
         displayTasks,
+        displayTags,
         loadTasksForm,
         loadTagsForm,
         submitForm,
