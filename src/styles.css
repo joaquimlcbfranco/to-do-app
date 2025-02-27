@@ -453,6 +453,11 @@ dialog[open]::after {
 	color: rgba(0, 0, 0, 0.5);
 }
 
+.dialog-form input:first-of-type::placeholder {
+	color: rgb(255, 101, 119);
+	text-align: end;
+	transition: 0.5s;
+}
 
 .dialog-form input:not([type="checkbox"]):hover,
 .dialog-form input:not([type="checkbox"]):focus,
