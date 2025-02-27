@@ -4,20 +4,22 @@ const tags = (() => {
     let tagList = [];
 
     class Tag {
-        constructor(title) {
+        constructor(title, color) {
             this.title = title;
+            this.color = color;
             this.tasks = [];
         }
     }
 
-    const addTag = (title) => {
-        const tag = new Tag(title);
+    const addTag = (title, color) => {
+        const tag = new Tag(title, color);
         tagList.push(tag);
         console.log(tagList);
     }
 
-    const editTag = (tagIndex, title) => {
+    const editTag = (tagIndex, title, color) => {
         tagList[tagIndex].title = title;
+        tagList[tagIndex].color = color;
         console.log(tagList);
     }
 
