@@ -1,11 +1,11 @@
-import projects from './tags.js'
+import tags from './tags.js'
 import tasks from './tasks.js'
 
 const dom = (() => {
     const body = document.querySelector('body');
-    
+
     const userDetails = document.querySelector('user-details');
-    
+
     const navRows = document.querySelector('nav-buttons > nav-row');
 
     const tags = document.querySelector('.tags');
@@ -15,11 +15,71 @@ const dom = (() => {
     const cardsContainer = document.querySelector('.cards');
     const emptyCard = document.querySelector('.empty-card');
 
-    const fetchTasks = (projectIndex, taskIndex) => {
-        
+    const displayTasks = () => {
+        for (let tagIndex = 0; tagIndex < tags.tagList.length; i++) {
+            for (let taskIndex = 0; taskIndex < tags.tagList.tasks.length; taskIndex++) {
+                const task = tags.tagList[tagIndex].tasks[taskIndex];
+                
+                const card = document.createElement('div');
+
+                const cardTitle = document.createElement('h4');
+                const cardDescription = document.createElement('p');
+
+                const cardTags = document.createElement('div');
+                const cardPriority = document.createElement('p');
+                const cardDate = document.createElement('p');
+
+                const cardButtons = document.createElement('div');
+                const checkboxLabel = document.createElement('label');
+                const checkboxInput = document.createElement('input');
+                const checkboxSpan = document.createElement('span');
+                const checkboxIndicator = document.createElement('i');
+                const editButton = document.createElement('span');
+                const deleteButton = document.createElement('span');
+
+                card.classList.add('card');
+
+                cardTitle.classList.add('card-title');
+                cardTitle.textContent = task.title;
+
+                cardDescription.classList.add('card-description');
+                cardDescription.textContent = task.description;
+
+                cardTags.classList.add('card-tags');
+                cardPriority.textContent = 'test'
+                cardDate.textContent = task.date;
+
+                cardButtons.classList.add('card-buttons');
+                checkboxLabel.classList.add('checkbox');
+                checkboxInput.id = 'form-checkbox';
+                checkboxInput.type = 'checkbox';
+                checkboxIndicator.classList.add('indicator');
+                editButton.classList.add('material-symbols-outlined');
+                editButton.textContent = 'edit';
+                deleteButton.classList.add('material-symbols-outlined');
+                deleteButton.textContent = 'delete';
+
+                cardsContainer.appendChild(card);
+
+                card.appendChild(cardTitle);
+                card.appendChild(cardDescription);
+
+                card.appendChild(cardTags);
+                cardTags.appendChild(cardPriority);
+                cardTags.appendChild(cardDate);
+
+                card.appendChild(cardButtons);
+                cardButtons.appendChild(checkboxLabel);
+                checkboxLabel.appendChild(checkboxInput);
+                checkboxLabel.appendChild(checkboxSpan);
+                checkboxLabel.appendChild(checkboxIndicator);
+                cardButtons.appendChild(editButton);
+                cardButtons.appendChild(deleteButton);
+            }
+        }
     }
 
-    const loadForm = (formType, projectIndex, taskIndex) => {
+    const loadTasksForm = (formType, projectIndex, taskIndex) => {
         const dialog = document.createElement('dialog');
         const wrapper = document.createElement('div');
         const form = document.createElement('form');
@@ -163,7 +223,92 @@ const dom = (() => {
 
         submitButton.addEventListener('click', (e) => {
             e.preventDefault();
-            
+
+            submitForm();
+        });
+    }
+
+    const loadTagsForm = (formType, projectIndex) => {
+        const dialog = document.createElement('dialog');
+        const wrapper = document.createElement('div');
+        const form = document.createElement('form');
+
+        const closeButton = document.createElement('button');
+
+        const titleLabel = document.createElement('label');
+        const titleSpan1 = document.createElement('span');
+        const titleText = document.createElement('p');
+        const titleSpan2 = document.createElement('span');
+        const formTitle = document.createElement('input');
+
+        const colorLabel = document.createElement('label');
+        const colorSpan1 = document.createElement('span');
+        const colorText = document.createElement('p');
+        const colorSpan2 = document.createElement('span')
+        const formColor = document.createElement('input');
+
+        const submitButton = document.createElement('button');
+
+        wrapper.classList.add('wrapper');
+
+        form.classList.add('dialog-form');
+
+        closeButton.classList.add('form-close');
+        closeButton.setAttribute('type', 'button');
+        closeButton.addEventListener('click', () => closeForm(dialog));
+
+        titleText.textContent = 'Title';
+        formTitle.id = 'form-title';
+        formTitle.type = 'text'
+
+        colorText.textContent = 'Color';
+        formColor.id = 'form-color';
+        formColor.type = 'color';
+
+        submitButton.textContent = 'Submit';
+        submitButton.classList.add('form-button');
+        submitButton.setAttribute('type', 'submit');
+
+        body.appendChild(dialog);
+        dialog.appendChild(wrapper);
+        wrapper.appendChild(form);
+
+        form.appendChild(closeButton);
+
+        form.appendChild(titleLabel);
+        titleLabel.appendChild(titleSpan1);
+        titleLabel.appendChild(titleText);
+        titleLabel.appendChild(titleSpan2);
+        form.appendChild(formTitle);
+
+        form.appendChild(colorLabel);
+        colorLabel.appendChild(colorSpan1);
+        colorLabel.appendChild(colorText);
+        colorLabel.appendChild(colorSpan2);
+        form.appendChild(formColor);
+
+        form.appendChild(submitButton);
+
+        dialog.showModal();
+
+        if (formType === 'add') {
+            const red = Math.random() * (255 - 0);
+            const green = Math.random() * (255 - 0);
+            const blue = Math.random() * (255 - 0);
+            formColor.value = `rgb(${red}, ${green}, ${blue})`;
+        }
+
+        else if (formType === 'edit') {
+            formTitle.value = projects.projectList[projectIndex].tasks[taskIndex].title;
+            formDescription.value = projects.projectList[projectIndex].tasks[taskIndex].description;
+            formNotes.value = projects.projectList[projectIndex].tasks[taskIndex].notes;
+            prioritySelect.value = projects.projectList[projectIndex].tasks[taskIndex].priority;
+            formDate.value = projectIndex.projectList[projectIndex].tasks[taskIndex].dueDate;
+        }
+
+        submitButton.addEventListener('click', (e) => {
+            e.preventDefault();
+
             submitForm();
         });
     }
@@ -177,12 +322,13 @@ const dom = (() => {
     }
 
     emptyCard.addEventListener('click', () => {
-        loadForm('add');
+        loadTasksForm('add');
     });
 
     return {
-        fetchTasks,
-        loadForm,
+        displayTasks,
+        loadTasksForm,
+        loadTagsForm,
         closeForm,
     }
 })();
