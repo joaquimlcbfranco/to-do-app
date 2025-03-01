@@ -14,6 +14,14 @@ const events = (() => {
         else if (e.target.classList.contains('empty-card') || e.target.classList.contains('empty-card-icon')) {
             dom.loadTasksForm('add');
         }
+        else if (e.target.classList.contains('tags-button')) {
+            dom.loadTagsForm('add');
+        }
+        else if (e.target.classList.contains('tags-form-button')) {
+            e.preventDefault();
+
+            dom.submitTagsForm()
+        }
         else if (e.target.classList.contains('indicator') || e.target.classList.contains('form-checkbox')) {
 
         }
@@ -22,8 +30,8 @@ const events = (() => {
         }
         else if (e.target.classList.contains('form-button')) {
             e.preventDefault();
-            
-            dom.submitForm();
+            console.log('lol');
+            dom.submitTasksForm();
         }
     });
 })();
