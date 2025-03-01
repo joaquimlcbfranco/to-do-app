@@ -8,3 +8,6 @@ window.tags = tags;
 window.tasks = tasks;
 window.dom = dom;
 window.clear;
+
+dom.displayTasks();
+dom.displayTags();
