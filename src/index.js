@@ -9,6 +9,7 @@ window.tasks = tasks;
 window.dom = dom;
 window.clear;
 
+tags.addTag('General','rgb(87, 111, 114)');
 tags.addTag('test1', '#FF0000');
 tags.addTag('test2', '#00FF00');
 tasks.addTask(0, 'title1', '', '2025/02/02', false);
