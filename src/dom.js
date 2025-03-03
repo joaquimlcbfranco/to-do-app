@@ -370,7 +370,19 @@ const dom = (() => {
         displayTasks();
     }
 
-    tags.addTag('General','rgb(87, 111, 114)');
+    const highlightSelectedTag = (element) => {
+        const tagRows = document.querySelectorAll('.tag-row');
+        tagRows.forEach((tagRow) => {
+            if (tagRow != element) {
+                tagRow.style.opacity = 0.5;
+                tagRow.removeAttribute('data-tag-selected');
+            }
+            else {
+                tagRow.style.opacity = 1;
+                tagRow.setAttribute('data-tag-selected', '');
+            }
+        });
+    }
 
     return {
         displayTasks,
@@ -379,6 +391,7 @@ const dom = (() => {
         loadTagsForm,
         submitTasksForm,
         submitTagsForm,
+        highlightSelectedTag,
         closeForm,
     }
 })();
