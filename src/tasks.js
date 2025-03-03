@@ -1,4 +1,5 @@
-import tags from "./tags.js";
+import tags from './tags.js';
+
 
 const tasks = (() => {
     class Task {
@@ -13,7 +14,6 @@ const tasks = (() => {
     const addTask = (tagIndex, title, notes = '', dueDate, complete) => {
         const task = new Task(title, notes, dueDate, complete);
         tags.tagList[tagIndex].tasks.push(task);
-        console.log(tags.tagList[tagIndex]);
     };
 
     const editTask = (tagIndex, taskIndex, title, notes, dueDate) => {
@@ -24,12 +24,19 @@ const tasks = (() => {
 
     const deleteTask = (tagIndex, taskIndex) => {
         tags.tagList[tagIndex].tasks.splice(taskIndex, 1);
-        console.log(tags.tagList[tagIndex]);
     };
+
+    const filterTasks = (tagIndex) => {
+        const list = tags.tagList.filter((obj) => {
+            if (obj === tags.tagList[tagIndex]) return 1;
+        });
+        dom.displayTasks(list);
+    }
 
     return {
         addTask,
         editTask,
+        filterTasks,
         deleteTask,
     };
 })();
