@@ -1,6 +1,7 @@
-import tags from './tags.js'
 import tasks from './tasks.js'
-import { format, formatDistance, formatRelative, subDays } from 'date-fns'
+import tags from './tags.js'
+
+import { formatDistance } from 'date-fns'
 
 const dom = (() => {
     const body = document.querySelector('body');
@@ -13,7 +14,6 @@ const dom = (() => {
 
     const headerDetails = document.querySelector('.header-details');
     const cardsContainer = document.querySelector('.cards');
-    const emptyCard = document.querySelector('.empty-card');
 
     const displayTags = () => {
         if (tagsContainer.querySelectorAll('.tag-row').length) {
@@ -34,10 +34,12 @@ const dom = (() => {
             const deleteButton = document.createElement('span');
     
             tagRow.classList.add('tag-row');
+            tagRow.setAttribute('data-tag-id', tagIndex);
             tagSpan.classList.add('material-symbols-outlined', 'tag-icon');
             tagSpan.textContent = 'tag';
             tagTitle.textContent = tags.tagList[tagIndex].title;
             tagTitle.id = tags.tagList[tagIndex].title.toLowerCase();
+            tagTitle.classList.add('tag-title');
             editButton.classList.add('edit-tag', 'material-symbols-outlined');
             editButton.textContent = 'edit';
             deleteButton.classList.add('delete-tag', 'material-symbols-outlined');
@@ -62,14 +64,14 @@ const dom = (() => {
         tagsContainer.appendChild(button);
     }
 
-    const displayTasks = () => {
+    const displayTasks = (list = tags.tagList) => {
         while (cardsContainer.firstChild) {
             cardsContainer.removeChild(cardsContainer.firstChild);
         }
 
-        for (let tagIndex = 0; tagIndex < tags.tagList.length; tagIndex++) {
-            for (let taskIndex = 0; taskIndex < tags.tagList[tagIndex].tasks.length; taskIndex++) {
-                const task = tags.tagList[tagIndex].tasks[taskIndex];
+        for (let tagIndex = 0; tagIndex < list.length; tagIndex++) {
+            for (let taskIndex = 0; taskIndex < list[tagIndex].tasks.length; taskIndex++) {
+                const task = list[tagIndex].tasks[taskIndex];
                 
                 const card = document.createElement('div');
 
@@ -207,8 +209,8 @@ const dom = (() => {
         }
 
         else if (formType === 'edit') {
-            formTitle.value = projects.tagList[tagIndex].title;
-            formColor.value = projects.tagList[tagIndex].color
+            formTitle.value = tags.tagList[tagIndex].title;
+            formColor.value = tags.tagList[tagIndex].color
         }
     }
 
@@ -306,40 +308,6 @@ const dom = (() => {
         dialog.close();
     }
 
-    const submitTasksForm = () => {
-        console.log('entered');
-        const form = document.querySelector('dialog[open] > .wrapper > .dialog-form');
-        const tagIndex = form.getAttribute('data-tag-id');
-        const taskIndex = form.getAttribute('data-task-id');
-
-        const title = form.querySelector('#form-title');
-        if (title.value == '') {
-            title.style.color = 'rgb(255, 101, 119)';
-            title.style.border = '1px solid rgb(255, 101, 119)';
-            return;
-        }
-        else {
-            title.style.color = 'rgba(0, 0, 0, 1)';
-            title.style.border = 'none';
-        }
-
-        const notes = form.querySelector('form > #form-notes');
-        notes.style.color = 'rgb(0, 0 ,0)';
-
-        const dueDate = form.querySelector('form > #form-date');
-
-        if (tagIndex == 0 && taskIndex == '') {
-            tasks.addTask(+tagIndex, title.value, notes.value, dueDate.value, false);
-            closeForm();
-        }
-        else if (taskIndex != '') {
-            tasks.editTask(tagIndex, taskIndex, title.value, notes.value, dueDate.value);
-            closeForm();
-        }
-
-        displayTasks();
-    }
-
     const submitTagsForm = () => {
         const form = document.querySelector('dialog[open] > .wrapper > .dialog-form');
         const tagIndex = form.getAttribute('data-tag-id');
@@ -367,6 +335,39 @@ const dom = (() => {
         }
 
         displayTags();
+    }
+
+    const submitTasksForm = () => {
+        const form = document.querySelector('dialog[open] > .wrapper > .dialog-form');
+        const tagIndex = form.getAttribute('data-tag-id');
+        const taskIndex = form.getAttribute('data-task-id');
+
+        const title = form.querySelector('#form-title');
+        if (title.value == '') {
+            title.style.color = 'rgb(255, 101, 119)';
+            title.style.border = '1px solid rgb(255, 101, 119)';
+            return;
+        }
+        else {
+            title.style.color = 'rgba(0, 0, 0, 1)';
+            title.style.border = 'none';
+        }
+
+        const notes = form.querySelector('form > #form-notes');
+        notes.style.color = 'rgb(0, 0 ,0)';
+
+        const dueDate = form.querySelector('form > #form-date');
+
+        if (tagIndex == 0 && taskIndex == '') {
+            tasks.addTask(+tagIndex, title.value, notes.value, dueDate.value, false);
+            closeForm();
+        }
+        else if (taskIndex != '') {
+            tasks.editTask(+tagIndex, taskIndex, title.value, notes.value, dueDate.value);
+            closeForm();
+        }
+
+        displayTasks();
     }
 
     tags.addTag('General','rgb(87, 111, 114)');
