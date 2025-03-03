@@ -25,13 +25,16 @@ const events = (() => {
         else if (e.target.classList.contains('delete-tag')) {
 
         }
-        else if (e.target.classList.contains('tag-icon') || e.target.classList.contains('tag-title')) {
+        else if (e.target.classList.contains('tag-title')) {
             const tagIndex = e.target.parentNode.getAttribute('data-tag-id');
             tasks.filterTasks(tagIndex);
+            dom.highlightSelectedTag(e.target.parentNode);
+        }
+        else if (e.target.clasList.contains()) {
+            
         }
         else if (e.target.classList.contains('tags-form-button')) {
             e.preventDefault();
-
             dom.submitTagsForm()
         }
         else if (e.target.classList.contains('indicator') || e.target.classList.contains('form-checkbox')) {
@@ -42,7 +45,6 @@ const events = (() => {
         }
         else if (e.target.classList.contains('form-button')) {
             e.preventDefault();
-            console.log('lol');
             dom.submitTasksForm();
         }
     });
