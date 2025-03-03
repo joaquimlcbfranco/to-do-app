@@ -26,11 +26,17 @@ const tasks = (() => {
         tags.tagList[tagIndex].tasks.splice(taskIndex, 1);
     };
 
-    const filterTasks = (tagIndex) => {
-        const list = tags.tagList.filter((obj) => {
-            if (obj === tags.tagList[tagIndex]) return 1;
-        });
-        dom.displayTasks(list);
+    const filterTasks = (tagIndex = 'home') => {
+        if (tagIndex === 'home') {
+            const list = tags.tagList;
+            dom.displayTasks(list);
+        }
+        else {
+            const list = tags.tagList.filter((obj) => {
+                if (obj === tags.tagList[tagIndex]) return 1;
+            });
+            dom.displayTasks(list);
+        }
     }
 
     return {
