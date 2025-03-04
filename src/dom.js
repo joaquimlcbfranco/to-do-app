@@ -5,13 +5,8 @@ import { formatDistance } from "date-fns";
 const dom = (() => {
 	const body = document.querySelector("body");
 
-	const userDetails = document.querySelector("user-details");
-
-	const navRows = document.querySelector("nav-buttons > nav-row");
-
 	const tagsContainer = document.querySelector(".tags");
 
-	const headerDetails = document.querySelector(".header-details");
 	const cardsContainer = document.querySelector(".cards");
 
 	const displayTags = () => {
