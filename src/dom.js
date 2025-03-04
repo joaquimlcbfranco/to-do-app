@@ -1,6 +1,5 @@
 import tasks from './tasks.js'
 import tags from './tags.js'
-
 import { formatDistance } from 'date-fns'
 
 const dom = (() => {
@@ -74,6 +73,7 @@ const dom = (() => {
                 const task = list[tagIndex].tasks[taskIndex];
                 
                 const card = document.createElement('div');
+                card.style.borderLeft = `10px solid ${list[tagIndex].color}`
 
                 const cardTitle = document.createElement('h4');
 
@@ -102,6 +102,7 @@ const dom = (() => {
                 checkboxLabel.classList.add('checkbox');
                 checkboxInput.id = 'form-checkbox';
                 checkboxInput.type = 'checkbox';
+                checkboxSpan.classList.add('checkbox-span');
                 checkboxIndicator.classList.add('indicator');
                 editButton.classList.add('material-symbols-outlined');
                 editButton.classList.add('edit');
@@ -239,6 +240,12 @@ const dom = (() => {
         const dateSpan2 = document.createElement('span');
         const formDate = document.createElement('input');
 
+        const tagLabel = document.createElement('label');
+        const tagSpan1 = document.createElement('span');
+        const tagText = document.createElement('p'); 
+        const tagSpan2 = document.createElement('span');
+        const formTag = document.createElement('select');
+
         const submitButton = document.createElement('button');
 
         wrapper.classList.add('wrapper');
@@ -262,6 +269,9 @@ const dom = (() => {
         dateText.textContent = 'Date';
         formDate.id = 'form-date';
         formDate.type = 'datetime-local';
+
+        tagText.textContent = 'Tag';
+        formTag.id = 'form-tag';
 
         submitButton.textContent = 'Submit';
         submitButton.classList.add('form-button');
@@ -292,6 +302,20 @@ const dom = (() => {
         dateLabel.appendChild(dateSpan2);
         form.appendChild(formDate);
 
+
+        form.appendChild(tagLabel);
+        tagLabel.appendChild(tagSpan1);
+        tagLabel.appendChild(tagSpan2);
+        form.appendChild(formTag);
+        console.log(tags.tagList.length);
+        for (let i = 0; i < tags.tagList.length; i++) {
+            const formOption = document.createElement('option');
+            formOption.value = tags.tagList[i].title.toLowerCase();
+            formOption.textContent = tags.tagList[i].title;
+            formOption.setAttribute('data-tag-id', i);
+            formTag.appendChild(formOption);
+        }
+
         form.appendChild(submitButton);
 
         dialog.showModal();
@@ -300,6 +324,7 @@ const dom = (() => {
             formTitle.value = tags.tagList[tagIndex].tasks[taskIndex].title;
             formNotes.value = tags.tagList[tagIndex].tasks[taskIndex].notes;
             formDate.value = tags.tagList[tagIndex].tasks[taskIndex].dueDate;
+            formTag.disabled = true;
         }
     }
 
@@ -353,13 +378,17 @@ const dom = (() => {
             title.style.border = 'none';
         }
 
+        const select = form.querySelector('select');
+
         const notes = form.querySelector('form > #form-notes');
         notes.style.color = 'rgb(0, 0 ,0)';
 
         const dueDate = form.querySelector('form > #form-date');
 
-        if (tagIndex == 0 && taskIndex == '') {
-            tasks.addTask(+tagIndex, title.value, notes.value, dueDate.value, false);
+        if (taskIndex == '') {
+            const newTagIndex = select.selectedOptions[0].getAttribute('data-tag-id'); 
+            console.log(newTagIndex);
+            tasks.addTask(+newTagIndex, title.value, notes.value, dueDate.value, false);
             closeForm();
         }
         else if (taskIndex != '') {
@@ -370,8 +399,20 @@ const dom = (() => {
         displayTasks();
     }
 
-    const highlightSelectedTag = (element) => {
+    const markDone = (element, tagIndex, taskIndex) => {
+        if (tags.tagList[tagIndex].tasks[taskIndex].complete) {
+            tags.tagList[tagIndex].tasks[taskIndex].complete = false;
+            element.querySelector('h4').style.textDecoration = 'none';
+        }
+        else if (!tags.tagList[tagIndex].tasks[taskIndex].complete) {
+            tags.tagList[tagIndex].tasks[taskIndex].complete = true;
+            element.querySelector('h4').style.textDecoration = 'line-through';
+        }
+    }
+
+    const highlightElement = (element) => {
         const tagRows = document.querySelectorAll('.tag-row');
+        const navRows = document.querySelectorAll('.nav-row');
         tagRows.forEach((tagRow) => {
             if (tagRow != element) {
                 tagRow.style.opacity = 0.5;
@@ -391,8 +432,9 @@ const dom = (() => {
         loadTagsForm,
         submitTasksForm,
         submitTagsForm,
-        highlightSelectedTag,
         closeForm,
+        markDone,
+        highlightElement,
     }
 })();
 
