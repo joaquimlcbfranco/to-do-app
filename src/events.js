@@ -27,7 +27,6 @@ const events = (() => {
         }
         else if (e.target.classList.contains('delete-tag')) {
             const tag = e.target.parentNode;
-            console.log(tag);
             tags.deleteTag(+tag.getAttribute('data-tag-id'));
             dom.displayTags();
             dom.displayTasks();

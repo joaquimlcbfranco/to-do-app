@@ -1,6 +1,5 @@
 import tasks from './tasks.js';
 
-
 const tags = (() => {
     let tagList = [];
 

@@ -25,6 +25,17 @@ const tasks = (() => {
     const deleteTask = (tagIndex, taskIndex) => {
         tags.tagList[tagIndex].tasks.splice(taskIndex, 1);
     };
+    
+    const markDone = (element, tagIndex, taskIndex) => {
+        if (tags.tagList[tagIndex].tasks[taskIndex].complete) {
+            tags.tagList[tagIndex].tasks[taskIndex].complete = false;
+            element.querySelector('h4').style.textDecoration = 'none';
+        }
+        else if (!tags.tagList[tagIndex].tasks[taskIndex].complete) {
+            tags.tagList[tagIndex].tasks[taskIndex].complete = true;
+            element.querySelector('h4').style.textDecoration = 'line-through';
+        }
+    }
 
     const filterTasks = (tagIndex = 'home', interval = 'none') => {
         if (interval === 'none') {
@@ -83,6 +94,7 @@ const tasks = (() => {
     return {
         addTask,
         editTask,
+        markDone,
         filterTasks,
         deleteTask,
     };

@@ -307,7 +307,6 @@ const dom = (() => {
         tagLabel.appendChild(tagSpan1);
         tagLabel.appendChild(tagSpan2);
         form.appendChild(formTag);
-        console.log(tags.tagList.length);
         for (let i = 0; i < tags.tagList.length; i++) {
             const formOption = document.createElement('option');
             formOption.value = tags.tagList[i].title.toLowerCase();
@@ -388,7 +387,6 @@ const dom = (() => {
 
         if (taskIndex == '') {
             const newTagIndex = select.selectedOptions[0].getAttribute('data-tag-id'); 
-            console.log(newTagIndex);
             tasks.addTask(+newTagIndex, title.value, notes.value, dueDate.value, false);
             closeForm();
         }
