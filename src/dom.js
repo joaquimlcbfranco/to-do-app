@@ -360,6 +360,7 @@ const dom = (() => {
         }
 
         displayTags();
+        displayTasks();
     }
 
     const submitTasksForm = () => {
@@ -399,20 +400,12 @@ const dom = (() => {
         displayTasks();
     }
 
-    const markDone = (element, tagIndex, taskIndex) => {
-        if (tags.tagList[tagIndex].tasks[taskIndex].complete) {
-            tags.tagList[tagIndex].tasks[taskIndex].complete = false;
-            element.querySelector('h4').style.textDecoration = 'none';
-        }
-        else if (!tags.tagList[tagIndex].tasks[taskIndex].complete) {
-            tags.tagList[tagIndex].tasks[taskIndex].complete = true;
-            element.querySelector('h4').style.textDecoration = 'line-through';
-        }
-    }
-
     const highlightElement = (element) => {
         const tagRows = document.querySelectorAll('.tag-row');
         const navRows = document.querySelectorAll('.nav-row');
+        navRows.forEach((navRow) => {
+            navRow.style.opacity = 1;
+        })
         tagRows.forEach((tagRow) => {
             if (tagRow != element) {
                 tagRow.style.opacity = 0.5;
@@ -425,6 +418,38 @@ const dom = (() => {
         });
     }
 
+    const highlightNav = (element) => {
+        const tagRows = document.querySelectorAll('.tag-row');
+        const navRows = document.querySelectorAll('.nav-row');
+        tagRows.forEach((tagRow) => {
+            tagRow.style.opacity = 1;
+        })
+        navRows.forEach((navRow) => {
+            if (navRow != element) {
+                navRow.style.opacity = 0.5;
+                navRow.removeAttribute('data-tag-selected');
+            }
+            else {
+                navRow.style.opacity = 1;
+                navRow.setAttribute('data-tag-selected', '');
+            }
+        });
+    }
+
+    const resetHighlights = () => {
+        const tagRows = document.querySelectorAll('.tag-row');
+        const navRows = document.querySelectorAll('.nav-row');
+        tagRows.forEach((tagRow) => {
+            tagRow.removeAttribute('data-tag-selected');
+            tagRow.style.opacity = 1;
+        })
+        navRows.forEach((navRow) => {
+            navRow.removeAttribute('data-tag-selected');
+            navRow.style.opacity = 1;
+        })
+        
+    }
+
     return {
         displayTasks,
         displayTags,
@@ -433,8 +458,9 @@ const dom = (() => {
         submitTasksForm,
         submitTagsForm,
         closeForm,
-        markDone,
         highlightElement,
+        highlightNav,
+        resetHighlights,
     }
 })();
 
