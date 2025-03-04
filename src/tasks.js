@@ -1,5 +1,5 @@
 import tags from './tags.js';
-
+import { format, formatDistance, formatRelative, isThisMonth, isThisWeek, isToday, subDays } from 'date-fns'
 
 const tasks = (() => {
     class Task {
@@ -26,17 +26,58 @@ const tasks = (() => {
         tags.tagList[tagIndex].tasks.splice(taskIndex, 1);
     };
 
-    const filterTasks = (tagIndex = 'home') => {
-        if (tagIndex === 'home') {
-            const list = tags.tagList;
+    const filterTasks = (tagIndex = 'home', interval = 'none') => {
+        if (interval === 'none') {
+            if (tagIndex === 'home') {
+                const list = tags.tagList;
+                dom.displayTasks(list);
+            }
+            else {
+                const list = tags.tagList.filter((obj) => {
+                    if (obj === tags.tagList[tagIndex]) return 1;
+                });
+                dom.displayTasks(list);
+            }
+        }
+        else if (tagIndex === 'other' && interval === 'today') {
+            const list = [
+                {title: 'Today', color: '#576F72', tasks: []},
+            ];
+            for (let i = 0; i < tags.tagList.length; i++) {
+                for (let j = 0; j < tags.tagList[i].tasks.length; j++) {
+                    if (isToday(tags.tagList[i].tasks[j].dueDate)) {
+                        list[0].tasks.push(tags.tagList[i].tasks[j]);
+                    }
+                }
+            }
             dom.displayTasks(list);
         }
-        else {
-            const list = tags.tagList.filter((obj) => {
-                if (obj === tags.tagList[tagIndex]) return 1;
-            });
+        else if (tagIndex === 'other' && interval === 'week') {
+            const list = [
+                {title: 'Today', color: '#576F72', tasks: []},
+            ];
+            for (let i = 0; i < tags.tagList.length; i++) {
+                for (let j = 0; j < tags.tagList[i].tasks.length; j++) {
+                     if (isThisWeek(tags.tagList[i].tasks[j].dueDate)) {
+                        list[0].tasks.push(tags.tagList[i].tasks[j]);
+                     }
+                }
+            }
             dom.displayTasks(list);
         }
+        else if (tagIndex === 'other' && interval === 'month') {
+            const list = [
+                {title: 'Today', color: '#576F72', tasks: []},
+            ];
+            for (let i = 0; i < tags.tagList.length; i++) {
+                for (let j = 0; j < tags.tagList[i].tasks.length; j++) {
+                     if (isThisMonth(tags.tagList[i].tasks[j].dueDate)) {
+                        list[0].tasks.push(tags.tagList[i].tasks[j]);
+                     }
+                }
+            }
+           dom.displayTasks(list);
+       }
     }
 
     return {
