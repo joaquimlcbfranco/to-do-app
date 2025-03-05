@@ -40,19 +40,15 @@ const events = (() => {
       tasks.filterTasks(tagIndex);
       dom.highlightElement(e.target.parentNode);
     } else if (e.target.classList.contains("home")) {
-      const tagIndex = e.target.parentNode.getAttribute("data-tag-id");
       tasks.filterTasks("home");
       dom.highlightNav(e.target.parentNode);
     } else if (e.target.classList.contains("today")) {
-      const tagIndex = e.target.parentNode.getAttribute("data-tag-id");
       tasks.filterTasks("other", "today");
       dom.highlightNav(e.target.parentNode);
     } else if (e.target.classList.contains("week")) {
-      const navIndex = e.target.parentNode.getAttribute("data-tag-id");
       tasks.filterTasks("other", "week");
       dom.highlightNav(e.target.parentNode);
     } else if (e.target.classList.contains("month")) {
-      const tagIndex = e.target.parentNode.getAttribute("data-tag-id");
       tasks.filterTasks("other", "month");
       dom.highlightNav(e.target.parentNode);
     } else if (e.target.classList.contains("tags-form-button")) {
